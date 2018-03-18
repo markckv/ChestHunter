@@ -280,8 +280,8 @@ int main(int argc, char **argv) {
     int downdown = SDLK_KP_MINUS;
     float cameraX = 0;
     float cameray = 10;
-    float cameraz = 0;
-    int oldangle = 0;
+    float cameraz = 0; int oldangle = 0;
+
     int s = 0;
     int *netHero;
     int angle = 90;
