@@ -47,19 +47,14 @@ public:
         double cameraVY = 0;
         int plaerN = 1;
         while (true) {
-            SDL_Event event;
-            if (SDL_PollEvent(&event) != 0) {
-                if (event.type == SDL_KEYDOWN)
-                    s = event.key.keysym.sym;
-                if (event.type == SDL_KEYUP)
-                    s = 0;
-            }
-            if (s == q) {
+SDL_PumpEvents();
+            auto keyBoard = SDL_GetKeyboardState(nullptr);
+            if (keyBoard[SDL_SCANCODE_Q]) {
 
                 angle = angle - 1;
 
             }
-            if (s == e) {
+            if (keyBoard[SDL_SCANCODE_E]) {
                 angle = angle + 1;
 
             }
@@ -69,7 +64,7 @@ public:
             if (angle < 0) {
                 angle = 360;
             }
-            if (s == left) {
+            if (keyBoard[SDL_SCANCODE_A]) {
                 oldangle = angle;
                 angle = angle+90;
                 if(angle> 360){
@@ -82,7 +77,7 @@ public:
                 }
                 angle = oldangle;
             }
-            if (s == right) {
+            if (keyBoard[SDL_SCANCODE_D]) {
                 oldangle = angle;
                 angle = angle-90;
                 if(angle< 0){
@@ -93,12 +88,12 @@ public:
                     cameraX =  cameraX - cos(angle * PI / 180) * 2;}
                 angle = oldangle;
             }
-            if (s == up) {
+            if (keyBoard[SDL_SCANCODE_S]) {
                 if (mapHero1.map.map[int(cameraX - cos(angle * PI / 180) * 2) * 1000 + int(cameraz - sin(angle * PI / 180) * 2)] != SIGN_FOREST) {
                     cameraz = cameraz - sin(angle * PI / 180) * 2;
                     cameraX =  cameraX - cos(angle * PI / 180) * 2;}
             }
-            if (s == down) {
+            if (keyBoard[SDL_SCANCODE_W]) {
                 oldangle = angle;
                 angle = angle-180;
                 if(angle< 0){

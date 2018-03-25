@@ -22,6 +22,7 @@ public:
         SDLNet_TCP_Recv(tspsocket2, &map.size , sizeof(int) );
         map.map = new int[map.size];
         SDLNet_TCP_Recv(tspsocket2,map.map , sizeof(int) *map.size * map.size);
+        return map;
 
     }
     void connect(int port, std::string ip ){
