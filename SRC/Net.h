@@ -6,12 +6,24 @@
 #define CHESTHUNTER_NET_H
 #include <string>
 #include <SDL2/SDL_net.h>
+#include "MapGenerator.h"
 
 
 class Net {
     TCPsocket tspsocket ;
     TCPsocket tspsocket2 ;
 public:
+    void sendMap(MapGenerator::mapHero mapHero){
+        SDLNet_TCP_Send(tspsocket2, &mapHero.map.size , sizeof(int));
+        SDLNet_TCP_Send(tspsocket2, mapHero.map.map , sizeof(int)*mapHero.map.size* mapHero.map.size);
+    }
+    MapGenerator::Map recvMap(){
+        MapGenerator::Map map;
+        SDLNet_TCP_Recv(tspsocket2, &map.size , sizeof(int) );
+        map.map = new int[map.size];
+        SDLNet_TCP_Recv(tspsocket2,map.map , sizeof(int) *map.size * map.size);
+
+    }
     void connect(int port, std::string ip ){
         SDL_Init(SDL_INIT_EVERYTHING);
         SDLNet_Init();
