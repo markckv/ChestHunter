@@ -75,7 +75,7 @@ public:
                     angle = 0 + angle;
                 }
                 if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 2) * 1000 +
-                                     int(cameraz/20 - sin(angle * PI / 180) * 2)] != SIGN_FOREST) {
+                                     int(cameraz/20  - sin(angle * PI / 180) * 2)] != SIGN_FOREST) {
 
                     cameraz = cameraz - sin(angle * PI / 180) * 2;
                     cameraX = cameraX - cos(angle * PI / 180) * 2;
