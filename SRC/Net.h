@@ -20,7 +20,7 @@ public:
     MapGenerator::Map recvMap(){
         MapGenerator::Map map;
         SDLNet_TCP_Recv(tspsocket2, &map.size , sizeof(int) );
-        map.map = new int[map.size];
+        map.map = new int[map.size*map.size];
         SDLNet_TCP_Recv(tspsocket2,map.map , sizeof(int) *map.size * map.size);
         return map;
 

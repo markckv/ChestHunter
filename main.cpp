@@ -47,13 +47,14 @@ int main(int argc, char **argv) {
     MapGenerator mapGenerator;
     MapGenerator::mapHero mapHero1;
     if (isHost == 0) {
-        net.accept(10062);
+//        net.accept(10062);
          mapHero1 = mapGenerator.generateMap(1000);
-        //net.sendMap(mapHero1);
+//        net.sendMap(mapHero1);
     }else{
-        net.connect(10062, "127.0.0.1");
-        auto map = net.recvMap();
-        mapHero1.map = map;
+//        net.connect(10062, "127.0.0.1");
+        mapHero1 = mapGenerator.generateMap(1000);
+//        auto map = net.recvMap();
+//        mapHero1.map = map;
     }
 
 

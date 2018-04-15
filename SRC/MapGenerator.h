@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <utility>
+#include <iostream>
 #include "GameObject.h"
 
 class MapGenerator {
@@ -60,9 +61,15 @@ public:
             if (height + y < map.size && width + x < map.size)
                 for (int width1 = 0; width1 < width; width1++) {
                     for (int long1 = 0; long1 < height; long1++) {
-                        map.map[(x + width1) * map.size + y + long1] = SIGN_FOREST;
+                        map.map[(y + long1) * map.size + x + width1] = SIGN_FOREST;
                     }
                 }
+            std::cout<< x <<"|"<< y <<"\n";
+        }
+        for (int width1 = 0; width1 < 20; width1++) {
+            for (int long1 = 0; long1 < 20; long1++) {
+                map.map[(10 + long1) * map.size + 10 + width1] = SIGN_FOREST;
+            }
         }
     }
 

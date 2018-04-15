@@ -61,12 +61,6 @@ public:
         fragmentShader.create();
         ShaderProgram shaderProgram(fragmentShader, vertexShader);
         shaderProgram.create();
-        Model vertexes;
-        generateCube(vertexes, vec3(-10, -10, -10), 20, 20, 20);
-        generateCube(vertexes, vec3(-10, -0.5, -10), 20, 1, 20);
-        generateCube(vertexes, vec3(-10, -2.5, -10), 20, 5, 20);
-        MemoryManager managerMemory(1000);
-        managerMemory.addModel(vertexes);
         glClearColor(0.2, 0.3, 0.3, 1.0);
         glm::mat4 transform;
         glm::mat4 endTransform;

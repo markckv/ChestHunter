@@ -15,6 +15,7 @@
 #include <iostream>
 #include "GameObject.h"
 #include "MapGenerator.h"
+#include "graphics/Drawer.h"
 
 using namespace glm;
 
@@ -28,6 +29,7 @@ public:
     void runGame(MapGenerator::mapHero mapHero1, std::pair<int, int> data, SDL_Window *window, Net net) {
         glm::mat4 transform;
         glm::mat4 endTransform;
+        Drawer drawer;
         GLuint transformGPULoc = glGetUniformLocation(gLuint2, "projection_view");
         GLuint transformGPULoc2 = glGetUniformLocation(gLuint2, "startid");
         GameObject1 gameObject1;
@@ -116,9 +118,9 @@ public:
                 angle = oldangle;
             }
             if (plaerN > 0) {
-                net.send(cameraX / 20, cameraz / 20);
-                data = net.recieve();
-
+//                net.send(cameraX / 20, cameraz / 20);
+//                data = net.recieve();
+data = {0,0};
             }
 
             size_t start = SDL_GetTicks();
@@ -149,33 +151,29 @@ public:
                     move = glm::translate(move, vec3(i * 20, 0, i1 * 20));
                     mat4 endTransform = projection * view * transform * move;
                     glUniformMatrix4fv(transformGPULoc, 1, GL_FALSE, glm::value_ptr(endTransform));
-                    if (mapHero1.map.map[i * 1000 + i1] == SIGN_GRASS) {
-                        glDrawArrays(GL_TRIANGLES, 6 * 2 * 3, 6 * 2 * 3);
+                    switch(mapHero1.map.map[i * 1000 + i1]){
+                        case SIGN_GRASS:
+                            drawer.draw("GRASS");
+                            break;
+                        case SIGN_FOREST:
+                            drawer.draw("FOREST");
+                            break;
+                        case SIGN_CHEST:
+                            drawer.draw("CHEST");
+                            break;
+                        default:
+                            throw std::logic_error("i don't know cell");
                     }
-                    if (mapHero1.map.map[i * 1000 + i1] == SIGN_FOREST) {
-                        glDrawArrays(GL_TRIANGLES, 0, 6 * 2 * 3);
-                    }
-                    if (mapHero1.map.map[i * 1000 + i1] == SIGN_CHEST) {
-                        glDrawArrays(GL_TRIANGLES, 6 * 2 * 3 * 2, 6 * 2 * 3);
-                    }
+
                     if (plaerN > 0) {
                         if (i == data.first && i1 == data.second)
-                            glDrawArrays(GL_TRIANGLES, 0, 6 * 2 * 3);
+                            drawer.draw("HERO");
                     }
+
                 };
-            for (int y = cameraz / 20 - 1; y <= cameraz / 20 + 1; y++) {
-                for (int x = cameraX / 20 - 1; x <= cameraX / 20 + 1; x++) {
 
-                    if (x < 0 || x >= 100 || y < 0 || y >= 1000) {
-                        std::cout << "X";
-                        continue;
-                    }
-                    std::cout << mapHero1.map.map[y * mapHero1.map.size + x];
-                }
-                std::cout << std::endl;
-            }
             SDL_GL_SwapWindow(window);
-
+            std::cout << cameraX/20 <<"|"<< cameraz/20<<"\n";
             size_t end = SDL_GetTicks();
 
             //    std::cout << "Delay: " << end-start << std::endl;
