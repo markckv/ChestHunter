@@ -48,11 +48,11 @@ int main(int argc, char **argv) {
     MapGenerator::mapHero mapHero1;
     if (isHost == 0) {
 //        net.accept(10062);
-         mapHero1 = mapGenerator.generateMap(1000);
+         mapHero1 = mapGenerator.generateMap(40);
 //        net.sendMap(mapHero1);
     }else{
 //        net.connect(10062, "127.0.0.1");
-        mapHero1 = mapGenerator.generateMap(1000);
+        mapHero1 = mapGenerator.generateMap(40);
 //        auto map = net.recvMap();
 //        mapHero1.map = map;
     }
@@ -60,7 +60,6 @@ int main(int argc, char **argv) {
 
 
    Graphics graphics;
-    graphics.createShaders();
 
 RunGame runGame;
     std::pair<int, int> none;

@@ -11,13 +11,15 @@
 #include "FragmentShader.h"
 
 class ShaderProgram {
+
+
     FragmentShader fragmentShader;
     VertexShader vertexShader;
 
     GLuint id;
 public:
     ShaderProgram(FragmentShader fragmentShader, VertexShader vertexShader);
-
+    ShaderProgram();
     void create();
     operator GLuint() ;
 };

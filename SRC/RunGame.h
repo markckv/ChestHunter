@@ -16,13 +16,14 @@
 #include "GameObject.h"
 #include "MapGenerator.h"
 #include "graphics/Drawer.h"
+#include "graphics/ShaderProgram.h"
 
 using namespace glm;
 
 class RunGame {
-    GLuint gLuint2;
+    ShaderProgram gLuint2;
 public:
-    void createGLunit2(GLuint gLuint) {
+    void createGLunit2(ShaderProgram gLuint) {
         gLuint2 = gLuint;
     }
 
@@ -30,6 +31,11 @@ public:
         glm::mat4 transform;
         glm::mat4 endTransform;
         Drawer drawer;
+        GLuint lightP = glGetUniformLocation(gLuint2, "lightP");
+        GLuint lightC = glGetUniformLocation(gLuint2, "lightC");
+        GLuint moveMat = glGetUniformLocation(gLuint2 ,  "transform");
+        glUniform3f(lightP,100,500,100 );
+        glUniform3f(lightC,0.3,0.3,0.3);
         GLuint transformGPULoc = glGetUniformLocation(gLuint2, "projection_view");
         GLuint transformGPULoc2 = glGetUniformLocation(gLuint2, "startid");
         GameObject1 gameObject1;
@@ -76,12 +82,12 @@ public:
                 if (angle > 360) {
                     angle = 0 + angle;
                 }
-                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 2) * 1000 +
-                                     int(cameraz/20  - sin(angle * PI / 180) * 2)] != SIGN_FOREST) {
+//                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 2) * mapHero1.map.size +
+//                                     int(cameraz/20  - sin(angle * PI / 180) * 2)] != SIGN_FOREST) {
 
                     cameraz = cameraz - sin(angle * PI / 180) * 2;
                     cameraX = cameraX - cos(angle * PI / 180) * 2;
-                }
+                //}
                 angle = oldangle;
             }
             if (keyBoard[SDL_SCANCODE_D]) {
@@ -90,7 +96,7 @@ public:
                 if (angle < 0) {
                     angle = 360 + angle;
                 }
-                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 2) * 1000 +
+                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 2) * mapHero1.map.size +
                                      int(cameraz/20 - sin(angle * PI / 180) * 2)] != SIGN_FOREST) {
                     cameraz = cameraz - sin(angle * PI / 180) * 2;
                     cameraX = cameraX - cos(angle * PI / 180) * 2;
@@ -98,7 +104,7 @@ public:
                 angle = oldangle;
             }
             if (keyBoard[SDL_SCANCODE_S]) {
-                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 2) * 1000 +
+                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 2) * mapHero1.map.size +
                                      int(cameraz/20 - sin(angle * PI / 180) * 2)] != SIGN_FOREST) {
                     cameraz = cameraz - sin(angle * PI / 180) * 2;
                     cameraX = cameraX - cos(angle * PI / 180) * 2;
@@ -110,7 +116,7 @@ public:
                 if (angle < 0) {
                     angle = 360 + angle;
                 }
-                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 2) * 1000 +
+                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 2) * mapHero1.map.size +
                                      int(cameraz/20 - sin(angle * PI / 180) * 2)] != SIGN_FOREST) {
                     cameraz = cameraz - sin(angle * PI / 180) * 2;
                     cameraX = cameraX - cos(angle * PI / 180) * 2;
@@ -145,13 +151,14 @@ data = {0,0};
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             for (int i = (cameraX / 20) - 20; i < (cameraX / 20) + 20; i++)
                 for (int i1 = (cameraz / 20) - 20; i1 < (cameraz / 20) + 20; i1++) {
-                    if (i < 0 || i1 < 0 || i1 >= 1000 || i >= 1000)
+                    if (i < 0 || i1 < 0 || i1 >= mapHero1.map.size || i >= mapHero1.map.size)
                         continue;
                     mat4 move;
                     move = glm::translate(move, vec3(i * 20, 0, i1 * 20));
                     mat4 endTransform = projection * view * transform * move;
                     glUniformMatrix4fv(transformGPULoc, 1, GL_FALSE, glm::value_ptr(endTransform));
-                    switch(mapHero1.map.map[i * 1000 + i1]){
+                    glUniformMatrix4fv(moveMat,1, GL_FALSE, glm::value_ptr(move));
+                    switch(mapHero1.map.map[i * mapHero1.map.size + i1]){
                         case SIGN_GRASS:
                             drawer.draw("GRASS");
                             break;
@@ -159,6 +166,7 @@ data = {0,0};
                             drawer.draw("FOREST");
                             break;
                         case SIGN_CHEST:
+                            drawer.draw("GRASS");
                             drawer.draw("CHEST");
                             break;
                         default:

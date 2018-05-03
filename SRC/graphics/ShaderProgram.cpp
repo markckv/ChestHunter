@@ -24,6 +24,7 @@ ShaderProgram::ShaderProgram(FragmentShader fragmentShader, VertexShader vertexS
     this->fragmentShader = fragmentShader;
     this->vertexShader = vertexShader;
 }
+ShaderProgram::ShaderProgram(){};
 ShaderProgram::operator GLuint() {
     return id;
 }

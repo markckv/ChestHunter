@@ -32,14 +32,14 @@ void Drawer::draw(std::string nameModel){
 }
 Drawer::Drawer() : managerMemory(1000000){
     LoaderModel loaderModel;
-   MemoryHandler memoryHandler =  managerMemory.addModel(loaderModel.load("../models/forest.obj"));
-    models.insert({"FOREST", memoryHandler});
-    memoryHandler = managerMemory.addModel( loaderModel.load("../models/chest.obj"));
-    models.insert({"CHEST", memoryHandler});
-    memoryHandler = managerMemory.addModel( loaderModel.load("../models/Hero.obj"));
-    models.insert({"HERO", memoryHandler});
-    memoryHandler = managerMemory.addModel( loaderModel.load("../models/Grass.obj"));
+   MemoryHandler memoryHandler =  managerMemory.addModel( loaderModel.load("../models/GRASS.obj"));
     models.insert({"GRASS", memoryHandler});
+    memoryHandler = managerMemory.addModel( loaderModel.load("../models/CHEST.obj"));
+    models.insert({"CHEST", memoryHandler});
+    memoryHandler = managerMemory.addModel( loaderModel.load("../models/HERO.obj"));
+    models.insert({"HERO", memoryHandler});
+    memoryHandler = managerMemory.addModel(loaderModel.load("../models/FOREST.obj"));
+    models.insert({"FOREST", memoryHandler});
 
 
 }

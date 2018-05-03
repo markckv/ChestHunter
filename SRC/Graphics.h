@@ -54,7 +54,7 @@ class Graphics {
     }
 
 public:
-    GLuint createShaders() {
+    auto createShaders() {
         VertexShader vertexShader;
         FragmentShader fragmentShader;
         vertexShader.create();
@@ -67,7 +67,7 @@ public:
         GLint transformGPULoc = glGetUniformLocation((GLuint) shaderProgram, "projection_view");
         GLint transformGPULoc2 = glGetUniformLocation((GLuint) shaderProgram, "startid");
         glUseProgram((GLuint) shaderProgram);
-        return (GLuint) shaderProgram;
+        return shaderProgram;
     }
 
 

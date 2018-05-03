@@ -11,6 +11,9 @@
 #include <glm/vec2.hpp>
 #include <algorithm>
 #include <iostream>
+#include <glm/detail/type_mat.hpp>
+#include <glm/detail/type_mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 inline bool space(char c) {
     if (c == '/')
@@ -46,6 +49,9 @@ Model LoaderModel::load(std::string name) {
     file.open(name);
     if (!file.is_open()) throw std::logic_error("CAN'T OPEN THIS FILE!" + name);
     std::string type;
+    glm::mat4 scale;
+    scale = glm::scale(scale, glm::vec3(2.55,2.55,2.55));
+    glm::vec3 color;
     while (!file.eof()) {
 
         file >> type;
@@ -76,10 +82,16 @@ Model LoaderModel::load(std::string name) {
 
             }
         }
-        std::cout << "faces: " << indexNormals.size()/3 << std::endl;
-        std::cout << "uvs: " << uvs.size() << std::endl;
-        std::cout << "pos: " << pos.size() << std::endl;
-        std::cout << "normal: " << normals.size() << std::endl;
+
+        if (type == "color") {
+            file >> color.x >> color.y >> color.z;
+
+        }
+
+//        std::cout << "faces: " << indexNormals.size()/3 << std::endl;
+//        std::cout << "uvs: " << uvs.size() << std::endl;
+//        std::cout << "pos: " << pos.size() << std::endl;
+//        std::cout << "normal: " << normals.size() << std::endl;
 
         std::cout << type  << std::endl;
     }
@@ -87,9 +99,12 @@ Model LoaderModel::load(std::string name) {
     srand(time(nullptr));
     for (int i = 0; i < indexPos.size(); i++) {
         Vertex vertex;
-        vertex.pos = pos[indexPos[i]];
-        vertex.color = glm::vec3(((double)rand())/std::numeric_limits<int>::max(),((double)rand())/std::numeric_limits<int>::max(), ((double)rand())/std::numeric_limits<int>::max());
-        vertex.normal = normals[indexNormals[i]];
+        glm::vec4 vec4(pos[indexPos[i]-1], 1);
+        vec4= scale * vec4;
+        glm::vec3 vec3 (vec4.x, vec4.y, vec4.z);
+        vertex.pos = vec3;
+        vertex.color = glm::vec3(color.x, color.y, color.z);
+        vertex.normal = normals[indexNormals[i]-1];
 //        vertex.uv = uvs[indexUv[i]];
         model.push_back(vertex);
     }
