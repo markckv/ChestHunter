@@ -34,7 +34,7 @@ public:
         GLuint lightP = glGetUniformLocation(gLuint2, "lightP");
         GLuint lightC = glGetUniformLocation(gLuint2, "lightC");
         GLuint moveMat = glGetUniformLocation(gLuint2 ,  "transform");
-        glUniform3f(lightP,100,500,100 );
+        glUniform3f(lightP,100,501,100 );
         glUniform3f(lightC,0.3,0.3,0.3);
         GLuint transformGPULoc = glGetUniformLocation(gLuint2, "projection_view");
         GLuint transformGPULoc2 = glGetUniformLocation(gLuint2, "startid");
