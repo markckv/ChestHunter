@@ -133,7 +133,7 @@ data = {0,0};
             cameraVY = sin(angle * PI / 180) * 2;
             cameraVX = cos(angle * PI / 180) * 2;
             // transform = glm::rotate(transform, glm::radians(1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-            glm::mat4 projection = glm::perspective(90.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
+            glm::mat4 projection = glm::perspective(1.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
 
             glm::mat4 view = glm::lookAt(glm::vec3(cameraX, cameray, cameraz),
                                          glm::vec3(cameraX + cameraVX, cameray, cameraz + cameraVY),
