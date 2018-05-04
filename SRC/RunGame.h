@@ -70,24 +70,24 @@ public:
                 angle = angle + 1;
 
             }
-            if (angle > 360) {
-                angle = 1;
-            }
-            if (angle < 0) {
-                angle = 360;
-            }
+//            if (angle > 360) {
+//                angle = 1;
+//            }
+//            if (angle < 0) {
+//                angle = 360;
+//            }
             if (keyBoard[SDL_SCANCODE_A]) {
                 oldangle = angle;
                 angle = angle + 90;
                 if (angle > 360) {
                     angle = 0 + angle;
                 }
-//                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 2) * mapHero1.map.size +
-//                                     int(cameraz/20  - sin(angle * PI / 180) * 2)] != SIGN_FOREST) {
+                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 0.1) * mapHero1.map.size +
+                                     int(cameraz/20  - sin(angle * PI / 180) * 0.1)] != SIGN_FOREST) {
 
                     cameraz = cameraz - sin(angle * PI / 180) * 2;
                     cameraX = cameraX - cos(angle * PI / 180) * 2;
-                //}
+                }
                 angle = oldangle;
             }
             if (keyBoard[SDL_SCANCODE_D]) {
@@ -96,16 +96,16 @@ public:
                 if (angle < 0) {
                     angle = 360 + angle;
                 }
-                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 2) * mapHero1.map.size +
-                                     int(cameraz/20 - sin(angle * PI / 180) * 2)] != SIGN_FOREST) {
+                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 0.1) * mapHero1.map.size +
+                                     int(cameraz/20 - sin(angle * PI / 180) * 0.1)] != SIGN_FOREST) {
                     cameraz = cameraz - sin(angle * PI / 180) * 2;
                     cameraX = cameraX - cos(angle * PI / 180) * 2;
                 }
                 angle = oldangle;
             }
             if (keyBoard[SDL_SCANCODE_S]) {
-                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 2) * mapHero1.map.size +
-                                     int(cameraz/20 - sin(angle * PI / 180) * 2)] != SIGN_FOREST) {
+                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 0.1) * mapHero1.map.size +
+                                     int(cameraz/20 - sin(angle * PI / 180) * 0.1)] != SIGN_FOREST) {
                     cameraz = cameraz - sin(angle * PI / 180) * 2;
                     cameraX = cameraX - cos(angle * PI / 180) * 2;
                 }
@@ -116,8 +116,8 @@ public:
                 if (angle < 0) {
                     angle = 360 + angle;
                 }
-                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 2) * mapHero1.map.size +
-                                     int(cameraz/20 - sin(angle * PI / 180) * 2)] != SIGN_FOREST) {
+                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 0.1) * mapHero1.map.size +
+                                     int(cameraz/20 - sin(angle * PI / 180) * 0.1)] != SIGN_FOREST) {
                     cameraz = cameraz - sin(angle * PI / 180) * 2;
                     cameraX = cameraX - cos(angle * PI / 180) * 2;
                 }
@@ -163,7 +163,20 @@ data = {0,0};
                             drawer.draw("GRASS");
                             break;
                         case SIGN_FOREST:
-                            drawer.draw("FOREST");
+                    if(((i+i1) % 5) == 1){
+                        drawer.draw("FOREST2");
+                    }
+                            if(((i+i1) % 5) == 2){
+                                drawer.draw("FOREST");
+                            }
+                            if(((i+i1) % 5) == 3){
+                                drawer.draw("FOREST3");
+                            }
+                            if(((i+i1) % 5) == 4){
+                               drawer.draw("FOREST4");
+                            }
+                            drawer.draw("GRASS");
+
                             break;
                         case SIGN_CHEST:
                             drawer.draw("GRASS");

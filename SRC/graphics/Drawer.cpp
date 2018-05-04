@@ -40,6 +40,13 @@ Drawer::Drawer() : managerMemory(1000000){
     models.insert({"HERO", memoryHandler});
     memoryHandler = managerMemory.addModel(loaderModel.load("../models/FOREST.obj"));
     models.insert({"FOREST", memoryHandler});
+    memoryHandler = managerMemory.addModel(loaderModel.load("../models/FOREST2.obj"));
+    models.insert({"FOREST2", memoryHandler});
+    memoryHandler = managerMemory.addModel(loaderModel.load("../models/FOREST3.obj"));
+    models.insert({"FOREST3", memoryHandler});
+    memoryHandler = managerMemory.addModel(loaderModel.load("../models/FOREST4.obj"));
+    models.insert({"FOREST4", memoryHandler});
+
 
 
 }
