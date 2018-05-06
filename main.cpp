@@ -42,7 +42,7 @@ using namespace glm;
 
 int main(int argc, char **argv) {
     Net net;
-    SDL_Window *window = init(800, 480);
+    SDL_Window *window = init(1280, 720);
     int isHost = atoi(argv[1]);
     MapGenerator mapGenerator;
     MapGenerator::mapHero mapHero1;

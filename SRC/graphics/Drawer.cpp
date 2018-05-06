@@ -38,8 +38,8 @@ Drawer::Drawer() : managerMemory(1000000){
     models.insert({"CHEST", memoryHandler});
     memoryHandler = managerMemory.addModel( loaderModel.load("../models/HERO.obj"));
     models.insert({"HERO", memoryHandler});
-    memoryHandler = managerMemory.addModel(loaderModel.load("../models/FOREST.obj"));
-    models.insert({"FOREST", memoryHandler});
+    memoryHandler = managerMemory.addModel(loaderModel.load("../models/FOREST1.obj"));
+    models.insert({"FOREST1", memoryHandler});
     memoryHandler = managerMemory.addModel(loaderModel.load("../models/FOREST2.obj"));
     models.insert({"FOREST2", memoryHandler});
     memoryHandler = managerMemory.addModel(loaderModel.load("../models/FOREST3.obj"));

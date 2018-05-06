@@ -167,7 +167,7 @@ data = {0,0};
                         drawer.draw("FOREST2");
                     }
                             if(((i+i1) % 5) == 2){
-                                drawer.draw("FOREST");
+                                drawer.draw("FOREST1");
                             }
                             if(((i+i1) % 5) == 3){
                                 drawer.draw("FOREST3");
