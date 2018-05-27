@@ -7,18 +7,21 @@
 #include <SDL2/SDL_net.h>
 //#include <SDL2/SDL_image.h>
 #include <cmath>
+#include <SDL_opengles2_gl2.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
 #include "SRC/Net.h"
-#include "SRC/MapGenerator.h"
+#include "../CLionProjects/GameServer/MapGenerator.h"
 #include "SRC/Graphics.h"
 #include "SRC/RunGame.h"
-
-#define PI 3.14159265
+#include "SRC/NetStr.h"
+#include "SRC/MapHero.h"
 
 int ifg = 0;
 TCPsocket tspsocket2;
-
+//std::list<int> & listSocket;
 SDL_Window *init(int W, int H) {
-
     SDL_Window *mainWindow;
     SDL_Init(SDL_INIT_VIDEO);
     // IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
@@ -41,30 +44,29 @@ using namespace glm;
 
 
 int main(int argc, char **argv) {
+    int port;
+    port = std::stoi(argv[1]);
+    int  acceptSocket = socket(AF_INET, SOCK_STREAM, 0);
+    sockaddr_in serv_addr;
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_addr.s_addr = INADDR_ANY;
+    serv_addr.sin_port = htons(port);
+    hostent *hostent1 = gethostbyname(argv[2]);
+    bcopy((char *)hostent1->h_addr, (char *)&serv_addr.sin_addr.s_addr, hostent1->h_length);
+    int connect1 = connect(acceptSocket, (struct sockaddr *) &serv_addr, sizeof(serv_addr));
+    perror("");
+mapHero maphero;
+NetStr netStr;
+    int NP;
+
     Net net;
     SDL_Window *window = init(1280, 720);
-    int isHost = atoi(argv[1]);
-    MapGenerator mapGenerator;
-    MapGenerator::mapHero mapHero1;
-    if (isHost == 0) {
-//        net.accept(10062);
-         mapHero1 = mapGenerator.generateMap(40);
-//        net.sendMap(mapHero1);
-    }else{
-//        net.connect(10062, "127.0.0.1");
-        mapHero1 = mapGenerator.generateMap(40);
-//        auto map = net.recvMap();
-//        mapHero1.map = map;
-    }
-
-
-
-   Graphics graphics;
+    Graphics graphics;
 
 RunGame runGame;
     std::pair<int, int> none;
     runGame.createGLunit2(graphics.createShaders());
-    runGame.runGame(mapHero1, none, window, net);
+    runGame.runGame(acceptSocket, window);
 
 
 }

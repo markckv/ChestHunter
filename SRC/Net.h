@@ -6,7 +6,7 @@
 #define CHESTHUNTER_NET_H
 #include <string>
 #include <SDL2/SDL_net.h>
-#include "MapGenerator.h"
+#include "../../CLionProjects/GameServer/MapGenerator.h"
 
 
 class Net {

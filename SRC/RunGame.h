@@ -14,10 +14,11 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include "GameObject.h"
-#include "MapGenerator.h"
+#include "../../CLionProjects/GameServer/MapGenerator.h"
 #include "graphics/Drawer.h"
 #include "graphics/ShaderProgram.h"
-
+#include "NetStr.h"
+#include <list>
 using namespace glm;
 
 class RunGame {
@@ -27,7 +28,15 @@ public:
         gLuint2 = gLuint;
     }
 
-    void runGame(MapGenerator::mapHero mapHero1, std::pair<int, int> data, SDL_Window *window, Net net) {
+    void runGame( int acceptSocket,  SDL_Window *window) {
+        NetStr netStr;
+        int NP = netStr.takeInt(acceptSocket);
+        int myID = netStr.takeInt(acceptSocket);
+        int x = netStr.takeInt(acceptSocket);
+        int y = netStr.takeInt(acceptSocket);
+        mapHero maphero = netStr.takeMap(acceptSocket);
+        std::pair<int, int> heroes[NP];
+        heroes[myID] = {x,y};
         glm::mat4 transform;
         glm::mat4 endTransform;
         Drawer drawer;
@@ -57,8 +66,9 @@ public:
         int angle = 90;
         double cameraVX = 0;
         double cameraVY = 0;
-        int plaerN = 1;
+
         while (true) {
+
             SDL_PumpEvents();
             auto keyBoard = SDL_GetKeyboardState(nullptr);
             if (keyBoard[SDL_SCANCODE_Q]) {
@@ -82,7 +92,7 @@ public:
                 if (angle > 360) {
                     angle = 0 + angle;
                 }
-                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 0.1) * mapHero1.map.size +
+                if (maphero.map.map[int(cameraX/20 - cos(angle * PI / 180) * 0.1) * maphero.map.size +
                                      int(cameraz/20  - sin(angle * PI / 180) * 0.1)] != SIGN_FOREST) {
 
                     cameraz = cameraz - sin(angle * PI / 180) * 2;
@@ -96,7 +106,7 @@ public:
                 if (angle < 0) {
                     angle = 360 + angle;
                 }
-                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 0.1) * mapHero1.map.size +
+                if (maphero.map.map[int(cameraX/20 - cos(angle * PI / 180) * 0.1) * maphero.map.size +
                                      int(cameraz/20 - sin(angle * PI / 180) * 0.1)] != SIGN_FOREST) {
                     cameraz = cameraz - sin(angle * PI / 180) * 2;
                     cameraX = cameraX - cos(angle * PI / 180) * 2;
@@ -104,7 +114,7 @@ public:
                 angle = oldangle;
             }
             if (keyBoard[SDL_SCANCODE_S]) {
-                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 0.1) * mapHero1.map.size +
+                if (maphero.map.map[int(cameraX/20 - cos(angle * PI / 180) * 0.1) * maphero.map.size +
                                      int(cameraz/20 - sin(angle * PI / 180) * 0.1)] != SIGN_FOREST) {
                     cameraz = cameraz - sin(angle * PI / 180) * 2;
                     cameraX = cameraX - cos(angle * PI / 180) * 2;
@@ -116,17 +126,29 @@ public:
                 if (angle < 0) {
                     angle = 360 + angle;
                 }
-                if (mapHero1.map.map[int(cameraX/20 - cos(angle * PI / 180) * 0.1) * mapHero1.map.size +
+                if (maphero.map.map[int(cameraX/20 - cos(angle * PI / 180) * 0.1) * maphero.map.size +
                                      int(cameraz/20 - sin(angle * PI / 180) * 0.1)] != SIGN_FOREST) {
                     cameraz = cameraz - sin(angle * PI / 180) * 2;
                     cameraX = cameraX - cos(angle * PI / 180) * 2;
                 }
                 angle = oldangle;
             }
-            if (plaerN > 0) {
-//                net.send(cameraX / 20, cameraz / 20);
-//                data = net.recieve();
-data = {0,0};
+            netStr.sendInt(acceptSocket, heroes[myID].first);
+            netStr.sendInt(acceptSocket, heroes[myID].second);
+            int ID;
+            while (true){
+                fd_set readfds;
+                FD_SET(acceptSocket, &readfds);
+                timeval timeout;
+                timeout.tv_sec = 0;
+                timeout.tv_usec = 0;
+            select(acceptSocket+1, &readfds, nullptr, nullptr, &timeout);
+            if (FD_ISSET(acceptSocket, &readfds)){
+               ID =  netStr.takeInt(acceptSocket);
+                int x = netStr.takeInt(acceptSocket);
+                int y = netStr.takeInt(acceptSocket);;
+                heroes[ID] = {x,y};
+            }else{ break;};
             }
 
             size_t start = SDL_GetTicks();
@@ -151,14 +173,14 @@ data = {0,0};
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             for (int i = (cameraX / 20) - 20; i < (cameraX / 20) + 20; i++)
                 for (int i1 = (cameraz / 20) - 20; i1 < (cameraz / 20) + 20; i1++) {
-                    if (i < 0 || i1 < 0 || i1 >= mapHero1.map.size || i >= mapHero1.map.size)
+                    if (i < 0 || i1 < 0 || i1 >= maphero.map.size || i >= maphero.map.size)
                         continue;
                     mat4 move;
                     move = glm::translate(move, vec3(i * 20, 0, i1 * 20));
                     mat4 endTransform = projection * view * transform * move;
                     glUniformMatrix4fv(transformGPULoc, 1, GL_FALSE, glm::value_ptr(endTransform));
                     glUniformMatrix4fv(moveMat,1, GL_FALSE, glm::value_ptr(move));
-                    switch(mapHero1.map.map[i * mapHero1.map.size + i1]){
+                    switch(maphero.map.map[i * maphero.map.size + i1]){
                         case SIGN_GRASS:
                             drawer.draw("GRASS");
                             break;
@@ -186,11 +208,11 @@ data = {0,0};
                             throw std::logic_error("i don't know cell");
                     }
 
-                    if (plaerN > 0) {
-                        if (i == data.first && i1 == data.second)
-                            drawer.draw("HERO");
-                    }
-
+for(int i2 = 0; i2 < NP; i2++){
+    if(i == heroes[i2].first && i1 == heroes[i2].second ){
+        drawer.draw("HERO");
+    }
+}
                 };
 
             SDL_GL_SwapWindow(window);
